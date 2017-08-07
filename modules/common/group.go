@@ -32,6 +32,9 @@ func Group(rg *echo.Group) {
 	// 修改缓存组基本信息
 	rg.PUT("/common/cacheGroups/:cacheGroupId", public.ReqRelay(host))
 
+	// 修改缓存组服务信息
+	rg.PUT("/common/cacheGroups/serviceStatus", public.ReqRelay(host))
+
 	// 缓存组尝试切换到自动模式
 	rg.PUT("/common/cacheGroups/:cacheGroupId/tryAuto", public.ReqRelay(host))
 	// 缓存组切换到自动模式

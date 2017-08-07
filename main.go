@@ -3,6 +3,7 @@ package main
 import (
 	"cdnboss-middle-pro/modules/common"
 	"cdnboss-middle-pro/modules/dispatch"
+	"cdnboss-middle-pro/modules/monitor"
 
 	"github.com/labstack/echo"
 )
@@ -10,16 +11,20 @@ import (
 func main() {
 	e := echo.New()
 
-	rg := e.Group("/api/v1/admin")
+	disR := e.Group("/api/v1/admin")
 
-	dispatch.Line(rg)
-	dispatch.View(rg)
-	dispatch.Record(rg)
+	dispatch.Line(disR)
+	dispatch.View(disR)
+	dispatch.Record(disR)
 
-	common.Platform(rg)
-	common.Group(rg)
-	common.Vip(rg)
-	common.DispatchMode(rg)
+	common.Platform(disR)
+	common.Group(disR)
+	common.Vip(disR)
+	common.DispatchMode(disR)
+
+	monitorR := e.Group("/v2")
+
+	monitor.Stm(monitorR)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
