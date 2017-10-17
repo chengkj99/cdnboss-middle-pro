@@ -1,3 +1,3 @@
 package dispatch
 
-const host = "http://cs.zjmanageplatform.qiniu.io:8092"
+const host = "http://cs.zjmanageplatform.qiniu.io:8090"

@@ -10,18 +10,15 @@ import (
 func Line(rg *echo.Group) {
 
 	// 获取全部线路
-	rg.GET("/:doType/lines", public.ReqRelay(host))
+	rg.GET("/dispatch/lines", public.ReqRelay(host))
 
 	// 获取线路
-	rg.GET("/:doType/lines/:lineId", public.ReqRelay(host))
-
-	// 获取指定平台下的所有线路 - doType: dispatch
-	rg.GET("/:doType/platforms/:platform_id/lines", public.ReqRelay(host))
+	rg.GET("/dispatch/lines/:lineId", public.ReqRelay(host))
 
 	// 新建线路
-	rg.POST("/:doType/lines", public.ReqRelay(host))
+	rg.POST("/dispatch/lines", public.ReqRelay(host))
 
 	// 修改线路
-	rg.PUT("/:doType/lines/:lineId", public.ReqRelay(host))
+	rg.PUT("/dispatch/lines/:lineId", public.ReqRelay(host))
 
 }

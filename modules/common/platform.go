@@ -24,4 +24,7 @@ func Platform(rg *echo.Group) {
 	// 修改信息平台
 	rg.PUT("/common/platforms/:platformId", public.ReqRelay(host))
 
+	// 获取指定平台下的所有线路
+	rg.GET("/common/platforms/:platform_id/lines", public.ReqRelay(host))
+
 }

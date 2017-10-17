@@ -18,6 +18,9 @@ func Group(rg *echo.Group) {
 	// 获取缓存组服务信息 ../serviceStatus?vip=183.2.208.21
 	rg.GET("/common/cacheGroups/serviceStatus", public.ReqRelay(host))
 
+	// 获取缓存组涉及的解析
+	rg.GET("/common/cacheGroups/:cacheGroupId/records", public.ReqRelay(host))
+
 	// 搜索缓存组
 	rg.POST("/common/cacheGroups/search", public.ReqRelay(host))
 
