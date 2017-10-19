@@ -9,87 +9,44 @@ import (
 	"github.com/labstack/echo"
 )
 
-// ReqRelay 对前端请求不做处理直接转发
-func ReqRelay(host string) func(c echo.Context) error {
-	return func(c echo.Context) error {
-		url := host + c.Request().RequestURI
-		req, err := http.NewRequest(c.Request().Method, url, c.Request().Body)
+// ReqRelay 对前端请求透传处理
+// host string, rewriteURL string
+func ReqRelay(arguments ...string) func(ctx echo.Context) error {
+	return func(ctx echo.Context) error {
+		url := handleArguments(ctx, arguments)
+		req, err := http.NewRequest(ctx.Request().Method, url, ctx.Request().Body)
 		if err != nil {
-			c.Logger().Errorf("error: %v", err)
+			ctx.Logger().Errorf("error: %v", err)
 			return nil
 		}
-
 		res, err := http.DefaultClient.Do(req)
 		if err != nil {
-			c.Logger().Errorf("error: %v", err)
+			ctx.Logger().Errorf("error: %v", err)
 			return nil
 		}
 		defer res.Body.Close()
-		c.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
-		c.Response().Status = res.StatusCode
-		_, err = io.Copy(c.Response().Writer, res.Body)
+		ctx.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
+		ctx.Response().Status = res.StatusCode
+		_, err = io.Copy(ctx.Response().Writer, res.Body)
 		if err != nil {
-			c.Logger().Errorf("error: %v", err)
+			ctx.Logger().Errorf("error: %v", err)
 			return nil
 		}
 		return nil
 	}
 }
 
-// ReqRelay2 对前端请求不做处理直接转发
-func ReqRelay2(host string, rewriteURL string) func(c echo.Context) error {
-	return func(c echo.Context) error {
-		url := host + c.Request().RequestURI
-		fmt.Println("url.....", url)
-		if rewriteURL != "" {
-			r, _ := regexp.Compile(rewriteURL)
-			url = r.ReplaceAllString(url, "")
-		}
-		fmt.Println("url.....", url)
-		req, err := http.NewRequest(c.Request().Method, url, c.Request().Body)
-		if err != nil {
-			c.Logger().Errorf("error: %v", err)
-			return nil
-		}
-
-		res, err := http.DefaultClient.Do(req)
-		if err != nil {
-			c.Logger().Errorf("error: %v", err)
-			return nil
-		}
-		defer res.Body.Close()
-		c.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
-		c.Response().Status = res.StatusCode
-		_, err = io.Copy(c.Response().Writer, res.Body)
-		if err != nil {
-			c.Logger().Errorf("error: %v", err)
-			return nil
-		}
-		return nil
+// 根据arguments的长度，判断是否含有第二个rewriteURL参数，如果有就干掉；
+func handleArguments(ctx echo.Context, arguments []string) string {
+	ArgLen := len(arguments)
+	host := arguments[0]
+	url := host + ctx.Request().RequestURI
+	fmt.Println("url before handle.....", url)
+	if ArgLen > 1 {
+		rewriteURL := arguments[1]
+		r, _ := regexp.Compile(rewriteURL)
+		url = r.ReplaceAllString(url, "")
 	}
+	fmt.Println("url after handle.....", url)
+	return url
 }
-
-// ReqRelay3 透传处理
-// func ReqRelay3(host string, c echo.Context) error {
-// 	url := host + c.Request().RequestURI
-// 	req, err := http.NewRequest(c.Request().Method, url, c.Request().Body)
-// 	if err != nil {
-// 		c.Logger().Errorf("error: %v", err)
-// 		return nil
-// 	}
-
-// 	res, err := http.DefaultClient.Do(req)
-// 	if err != nil {
-// 		c.Logger().Errorf("error: %v", err)
-// 		return nil
-// 	}
-// 	defer res.Body.Close()
-// 	c.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
-// 	c.Response().Status = res.StatusCode
-// 	_, err = io.Copy(c.Response().Writer, res.Body)
-// 	if err != nil {
-// 		c.Logger().Errorf("error: %v", err)
-// 		return nil
-// 	}
-// 	return nil
-// }
