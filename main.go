@@ -36,29 +36,6 @@ func main() {
 			fmt.Println("code, he.Message..", code, he.Message)
 		}
 	}
-
-	// disR := e.Group("/api/v1/admin")
-	// disR.GET("/*", public.ReqRelay("http://cs.zjmanageplatform.qiniu.io:8090"))
-	// // 调度系统
-	// dispatch.Line(disR)
-	// dispatch.View(disR)
-	// dispatch.Record(disR)
-
-	// // 公共接口
-	// common.Platform(disR)
-	// common.Group(disR)
-	// common.Vip(disR)
-	// common.DispatchMode(disR)
-
-	// 监控
-	// test url localhost:1323/fcm-api/v2/node/alarm/rules
-	// monitorR := e.Group("/fcm-api")
-	// monitorR.GET("/*", public.ReqRelay("http://124.160.26.132:51200", "/fcm-api"))
-	// monitor.Stm(monitorR)
-
-	// // 告警系统
-	alarmR := e.Group("/alarm")
-	alarmR.GET("/*", public.ReqRelay("http://115.236.16.115:8081", "/alarm"))
-
+	public.ProxyParse(e)
 	e.Logger.Fatal(e.Start(":1323"))
 }

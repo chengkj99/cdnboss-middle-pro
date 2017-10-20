@@ -36,17 +36,17 @@ func ReqRelay(arguments ...string) func(ctx echo.Context) error {
 	}
 }
 
-// 根据arguments的长度，判断是否含有第二个rewriteURL参数，如果有就干掉；
+// 根据arguments的长度，判断是否含有第二个rewriteURL参数，如果有就删掉；
 func handleArguments(ctx echo.Context, arguments []string) string {
 	ArgLen := len(arguments)
 	host := arguments[0]
 	url := host + ctx.Request().RequestURI
-	fmt.Println("url before handle.....", url)
+	fmt.Println("url before:", url)
 	if ArgLen > 1 {
 		rewriteURL := arguments[1]
 		r, _ := regexp.Compile(rewriteURL)
 		url = r.ReplaceAllString(url, "")
 	}
-	fmt.Println("url after handle.....", url)
+	fmt.Println("url after:", url)
 	return url
 }
